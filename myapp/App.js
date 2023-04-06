@@ -33,7 +33,7 @@ export default function App() {
       <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: Colors.BgDarkGreen },
-          headerTintColor: Colors.White,
+          headerTintColor: Colors.darkBlack,
           headerTitleAlign: "center",
         }}
       >
@@ -48,12 +48,10 @@ export default function App() {
       <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: Colors.BgDarkGreen },
-          headerTintColor: Colors.White,
+          headerTintColor: Colors.darkBlack,
           headerTitleAlign: "center",
         }} initialRouteName="Main">
         <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
-        <Stack.Screen name="Homepage" component={Homepage} options={{ headerTitle: "Dog Assessor" }} />
-        <Stack.Screen name="Userpage" component={Userpage} options={{ headerTitle: "My Recipes" }} />
       </Stack.Navigator>
     );
   };

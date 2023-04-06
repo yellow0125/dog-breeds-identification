@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import Colors from './Color'
-import {Dimensions } from 'react-native'
+import { Dimensions } from 'react-native'
 
 
 const container = StyleSheet.create({
@@ -53,6 +53,7 @@ const container = StyleSheet.create({
     },
     image: {
         aspectRatio: 1 / 1,
+
     },
     fillHorizontal: {
         flexGrow: 1,
@@ -101,28 +102,30 @@ const container = StyleSheet.create({
         width: 300,
         margin: 10,
         padding: 20,
-        borderRadius:10,
-      },
+        borderRadius: 10,
+    },
     picker: {
-        backgroundColor: Colors.BgDarkGreen, 
+        backgroundColor: Colors.BgDarkGreen,
     },
     pickerItem: {
         color: Colors.White,
-        backgroundColor:Colors.BgDarkGreen,
+        backgroundColor: Colors.BgDarkGreen,
     },
     post2: {
         width: "100%",
         marginTop: 10,
     },
+
     imageContainer: {
         width: Dimensions.get('window').width * 0.7,
         height: Dimensions.get('window').width * 0.7,
         borderRadius: Dimensions.get('window').width * 0.7 / 2,
         borderWidth: 2,
-        borderColor: Colors.BgDarkGreen,
+        borderColor: Colors.darkBlack,
         overflow: "hidden",
         marginVertical: Dimensions.get('window').height / 30,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginLeft:200,
     },
     NoRecipeImage: {
         width: "100%",
@@ -132,7 +135,7 @@ const container = StyleSheet.create({
         borderRadius: 5,
         marginTop: 4,
         marginRight: 5,
-        marginBottom:5,
+        marginBottom: 5,
 
         width: Dimensions.get('window').width * 0.5,
     },
@@ -152,7 +155,7 @@ const form = StyleSheet.create({
     bottomButton: {
         alignSelf: 'center',
         alignContent: 'center',
-        borderColor: Colors.White,
+        borderColor: Colors.darkBlack,
         borderBottomWidth: 1,
         padding: 10,
         textAlign: 'center',
@@ -172,9 +175,9 @@ const form = StyleSheet.create({
     image: {
         alignSelf: 'center',
         width: 300,
-        height: 120,
+        height: 220,
         marginTop: 80,
-        marginBottom: -120
+        marginBottom: -150
     },
     uploadedImage: {
         justifyContent: 'center',
@@ -191,8 +194,8 @@ const form = StyleSheet.create({
         justifyContent: 'center',
         width: '46%',
         height: 170,
-        margin:5,
-       
+        margin: 5,
+
     },
     imageInDetail: {
         justifyContent: 'center',
@@ -204,19 +207,19 @@ const form = StyleSheet.create({
         height: 100,
         borderRadius: 100 / 2
     },
-    imageR:{
-        width:'100%',
-        height:'100%',
-        borderRadius:5,
-        
+    imageR: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 5,
+
     },
     selectToggle: {
         paddingHorizontal: 10,
         paddingVertical: 12,
         borderColor: Colors.BgDarkGreen,
         borderWidth: 2,
-        margin:5,
-      },
+        margin: 5,
+    },
     RecipeListTitle: {
         color: Colors.DescriptionText,
         marginLeft: 5,

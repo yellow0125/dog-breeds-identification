@@ -15,28 +15,28 @@ export default function Main() {
         screenOptions={({ navigation, route }) => {
           return {
             headerStyle: { backgroundColor: Colors.BgDarkGreen },
-            headerTintColor: 'white',
+            headerTintColor: Colors.darkBlack,
             tabBarStyle: { backgroundColor: Colors.BgDarkGreen },
-            tabBarInactiveTintColor: Colors.White,
-            tabBarActiveTintColor: Colors.BgLighterYellow,
+            tabBarInactiveTintColor: Colors.darkGrey,
+            tabBarActiveTintColor: Colors.Orange,
             headerTitleAlign: 'center',
           }
         }}
         initialRouteName="Homepage"
       >
-        <Tab.Screen name="Homepage" component={Homepage}
+        <Tab.Screen name="Scanner" component={Homepage}
           options={{
-            tabBarIcon: ({ color, size }) => <Entypo name="list" size={size} color={color} />,
-            headerTitle: "Fooriend",
+            tabBarIcon: ({ color, size }) => <Entypo name="camera" size={size} color={color} />,
+            headerTitle: "Dog Assessor",
           }}
         />
-        <Tab.Screen name="Recordpage" component={Recordpage}
+        <Tab.Screen name="Record" component={Recordpage}
           options={{
             tabBarIcon: ({ color, size }) => <Entypo name="heart" size={size} color={color} />,
             headerTitle: "Search history",
           }}
         />
-        <Tab.Screen name="Userpage" component={Userpage}
+        <Tab.Screen name="Profile" component={Userpage}
           options={({ navigation }) => {
             return {
               tabBarIcon: ({ color, size }) => <FontAwesome name="user" size={size} color={color} />,

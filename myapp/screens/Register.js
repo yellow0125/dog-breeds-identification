@@ -45,7 +45,7 @@ export default function Register({ navigation }) {
 
   return (
     <View style={container.center}>
-      {/* <Image source={require('../../assets/logo.png')} style={form.image} /> */}
+      <Image source={require('../assets/logo.png')} style={form.image} />
       <View style={container.formCenter}>
         <TextInput
           style={form.textInput}
@@ -79,7 +79,7 @@ export default function Register({ navigation }) {
         <View style={form.bottomButton} >
           <Text
             onPress={() => navigation.replace("Login")}
-            style={{ color: Colors.White }}>
+            style={{ color: Colors.darkBlack }}>
             Already have an account? SignIn.
           </Text>
         </View>

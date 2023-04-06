@@ -38,41 +38,65 @@ export default function Userpage() {
   }, []);
   return (
     <>
-      <View>
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../assets/user.png')}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      </View>
+      <View style={styles.userContainer}>
         <Text style={styles.username}>{userData.username}</Text>
         <Text style={styles.userInfo}>{auth.currentUser.email}</Text>
         <Text style={styles.userInfo}>{userData.gender}</Text>
         <Text style={styles.userInfo}>{userData.country}</Text>
       </View>
-      <TouchableHighlight
-        underlayColor={Color.LightGrey}
-        onPress={() => signOut(auth)}
-      >
-        <View>
-          <Row style={styles.icon}>
-            <Feather
-              name="log-out"
-              size={30}
-              color={Color.Black}
-            />
-          </Row>
-          <Row><Text>Click to Logout</Text></Row>
-        </View>
-      </TouchableHighlight>
+      <Row style={[styles.iconContainer, styles.part]}>   
+                    <TouchableHighlight
+                        underlayColor={Color.LightGrey}
+                        onPress={() => {}}
+                    >
+                        <View>
+                            <Row style={styles.icon}>
+                                <Ionicons
+                                    name="ios-settings-outline"
+                                    size={30}
+                                    color={Color.Black}
+                                />
+                            </Row>
+                            <Row><Text>Edit Profile</Text></Row>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight
+                        underlayColor={Color.LightGrey}
+                        onPress={() => signOut(auth)}
+                    >
+                        <View>
+                            <Row style={styles.icon}>
+                                <Feather
+                                    name="log-out"
+                                    size={30}
+                                    color={Color.Black}
+                                />
+                            </Row>
+                            <Row><Text>Click to Logout</Text></Row>
+                        </View>
+                    </TouchableHighlight>
+                </Row>
     </>
   )
 }
 
 const styles = StyleSheet.create({
   imageContainer: {
-    width: Dimensions.get('window').width * 0.3,
-    height: Dimensions.get('window').width * 0.3,
-    borderRadius: Dimensions.get('window').width * 0.3 / 2,
+    width: Dimensions.get('window').width * 0.4,
+    height: Dimensions.get('window').width * 0.4,
+    borderRadius: Dimensions.get('window').width * 0.8 / 2,
     borderWidth: 2,
-    borderColor: Color.BgDarkGreen,
+    borderColor: Color.BLUE,
     overflow: "hidden",
     marginVertical: Dimensions.get('window').height / 30,
-    marginHorizontal: Dimensions.get('window').width / 30,
+    alignSelf: 'center',
   },
   image: {
     width: "100%",
@@ -83,26 +107,31 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').width * 0.22,
   },
   userContainer: {
-    marginVertical: Dimensions.get('window').height / 21,
-    marginHorizontal: Dimensions.get('window').width / 10,
+    alignSelf: 'center',
 
   },
   username: {
     fontSize: 24,
     fontWeight: 'bold',
-    paddingBottom: 5
-
+    paddingBottom: 5,
+    alignSelf:'center',
+    
   },
   userInfo: {
     color: Color.Grey,
     fontSize: 14,
+    alignSelf:'center',
 
   },
   iconContainer: {
     justifyContent: 'space-between',
+    paddingLeft:55,
+    paddingRight:40,
+    
   },
   icon: {
     justifyContent: 'center',
+    
   },
   pressed: {
     opacity: 0.75,
@@ -121,9 +150,7 @@ const styles = StyleSheet.create({
     minWidth: 100,
   },
   part: {
-    marginVertical: 10,
     marginHorizontal: 5,
-    paddingVertical: 10,
     paddingHorizontal: 5,
     backgroundColor: Color.White,
     borderRadius: 5,

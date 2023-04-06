@@ -22,14 +22,13 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 20,
     padding: 10,
-    backgroundColor: Colors.BgLighterYellow,
-    minWidth: 80,
+    backgroundColor: Colors.darkBlack
   },
   flat: {
     backgroundColor: Colors.LightGrey
   },
   buttonText: {
-    color: Colors.TextGreen,
+    color: Colors.White,
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,

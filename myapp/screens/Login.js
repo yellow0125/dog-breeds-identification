@@ -21,7 +21,7 @@ export default function Login({ navigation }) {
 
   return (
     <View style={container.center}>
-      {/* <Image source={require('../../assets/logo.png')} style={form.image} /> */}
+      <Image source={require('../assets/logo.png')} style={form.image} />
       <View style={container.formCenter}>
 
         <TextInput
@@ -46,7 +46,7 @@ export default function Login({ navigation }) {
           <Text
             title="Register"
             onPress={() => navigation.replace("Register")}
-            style={{ color: Colors.White }} >
+            style={{ color: Colors.darkBlack }} >
             Don't have an account? SignUp.
           </Text>
         </View>
