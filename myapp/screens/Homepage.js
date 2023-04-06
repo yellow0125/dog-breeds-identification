@@ -37,7 +37,11 @@ export default function App() {
     setPreviewVisible(true)
     setCapturedImage(photo)
   }
+  
   const __savePhoto = () => { }
+
+
+
   const __retakePicture = () => {
     setCapturedImage(null)
     setPreviewVisible(false)
@@ -242,7 +246,7 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
                   fontSize: 20
                 }}
               >
-                save photo
+                Go identifying
               </Text>
             </TouchableOpacity>
           </View>
