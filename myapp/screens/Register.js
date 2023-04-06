@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View, Image } from 'react-native';
+import { Text, TextInput, View, Image, KeyboardAvoidingView } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import { auth } from "../firebase/firebase-setup"
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -44,7 +44,12 @@ export default function Register({ navigation }) {
   }
 
   return (
-    <View style={container.center}>
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={50}
+      style={container.center}
+    >
+
       <Image source={require('../assets/logo.png')} style={form.image} />
       <View style={container.formCenter}>
         <TextInput
@@ -91,7 +96,7 @@ export default function Register({ navigation }) {
         onDismiss={() => { setIsValid({ boolSnack: false }) }}>
         {isValid.message}
       </Snackbar>
-    </View>
+    </KeyboardAvoidingView>
 
   )
 }

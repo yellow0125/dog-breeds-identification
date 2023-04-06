@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View, Alert, Image } from 'react-native';
+import { Text, TextInput, View, Alert, Image, KeyboardAvoidingView } from 'react-native';
 import { auth } from "../firebase/firebase-setup"
 import { signInWithEmailAndPassword } from "firebase/auth";
 import MainButton from '../components/UI/MainButton';
@@ -20,7 +20,11 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <View style={container.center}>
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={50}
+      style={container.center}
+    >
       <Image source={require('../assets/logo.png')} style={form.image} />
       <View style={container.formCenter}>
 
@@ -51,6 +55,7 @@ export default function Login({ navigation }) {
           </Text>
         </View>
       </View>
-    </View>
+
+    </KeyboardAvoidingView>
   )
 }
