@@ -11,6 +11,7 @@ import Recordpage from '../screens/Recordpage';
 const Tab = createBottomTabNavigator();
 export default function Main() {
     return (
+      
       <Tab.Navigator
         screenOptions={({ navigation, route }) => {
           return {
@@ -24,11 +25,13 @@ export default function Main() {
         }}
         initialRouteName="Homepage"
       >
-        <Tab.Screen name="Scanner" component={Homepage}
-          options={{
+        <Tab.Screen name="Scanner" component={Homepage} 
+        options={({ navigation }) => {
+          return {
             tabBarIcon: ({ color, size }) => <Entypo name="camera" size={size} color={color} />,
             headerTitle: "Dog Assessor",
-          }}
+          }
+        }}
         />
         <Tab.Screen name="Record" component={Recordpage}
           options={{

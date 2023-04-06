@@ -44,6 +44,8 @@ export default function App() {
       }
     });
   });
+
+
   const AuthStack = () => {
     return (
       <Stack.Navigator
@@ -68,8 +70,9 @@ export default function App() {
           headerTintColor: Colors.darkBlack,
           headerTitleAlign: "center",
         }} initialRouteName="Main">
-        <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
-        <Stack.Screen name="Loading" component={Loading} options={{ headerTitle: "Wait for a moment..." }} />
+
+        <Stack.Screen name="Main" component={Main} options={{ headerShown: false }}/>
+        {/* {loading && <Stack.Screen name="Loading" component={Loading} options={{ headerTitle: "Wait for a moment..." }} />} */}
         <Stack.Screen name="Resultpage" component={Resultpage} options={{ headerTitle: "Dog Assessor" }} />
       </Stack.Navigator>
     );
