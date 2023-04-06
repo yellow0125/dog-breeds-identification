@@ -4,13 +4,15 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image
 import { Camera } from 'expo-camera'
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-export default function App() {
+import Loading from './Loading';
+export default function Homepage({ route }) {
   const [startCamera, setStartCamera] = React.useState(false)
   const [previewVisible, setPreviewVisible] = React.useState(false)
   const [capturedImage, setCapturedImage] = React.useState(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
   const [camera, setCamera] = useState(null);
+  const [loading, setLoading] = useState(false)
 
   const verifyPermission = async () => {
     if (permissionInfo.granted) {
@@ -37,8 +39,10 @@ export default function App() {
     setPreviewVisible(true)
     setCapturedImage(photo)
   }
-  
-  const __savePhoto = () => { }
+
+  const __savePhoto = () => {
+    setLoading(true)
+  }
 
 
 
@@ -64,110 +68,113 @@ export default function App() {
     }
   }
   return (
-    <View style={styles.container}>
-
-      <View
-        style={{
-          flex: 1,
-          width: '100%'
-        }}
-      >
-        {previewVisible && capturedImage ? (
-          <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
-        ) : (
-          <Camera
-            type={cameraType}
-            flashMode={flashMode}
-            style={{ flex: 1 }}
-            ref={r => setCamera(r)}
-          >
-            <View
-              style={{
-                flex: 1,
-                width: '100%',
-                backgroundColor: 'transparent',
-                flexDirection: 'row'
-              }}
+    <>
+      {loading && <Loading />}
+      <View style={styles.container}>
+        <View
+          style={{
+            flex: 1,
+            width: '100%'
+          }}
+        >
+          {previewVisible && capturedImage ? (
+            <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
+          ) : (
+            <Camera
+              type={cameraType}
+              flashMode={flashMode}
+              style={{ flex: 1 }}
+              ref={r => setCamera(r)}
             >
-              {/* flash and switch */}
               <View
                 style={{
-                  position: 'absolute',
-                  left: '85%',
-                  top: '10%',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between'
-                }}
-              >
-                {flashMode === 'off' ? (<TouchableOpacity
-                  onPress={__handleFlashMode}
-                  style={{
-                    borderRadius: 50,
-                    height: 35,
-                    width: 35
-                  }}
-                >
-                    <Ionicons name="flash-off-outline" size={30} color="white" />
-                </TouchableOpacity>) : (<TouchableOpacity
-                  onPress={__handleFlashMode}
-                  style={{
-                    borderRadius: 50,
-                    height: 35,
-                    width: 35
-                  }}
-                >
-                  <Ionicons name="flash" size={30} color='gold' />
-                </TouchableOpacity>)}
-
-
-                <TouchableOpacity
-                  onPress={__switchCamera}
-                  style={{
-                    marginTop: 20,
-                    borderRadius: 50,
-                    height: 35,
-                    width: 35
-                  }}
-                >
-                  <MaterialCommunityIcons name="camera-flip-outline" size={30} color="white" />
-                </TouchableOpacity>
-              </View>
-              {/* #take pic */}
-              <View
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  flexDirection: 'row',
                   flex: 1,
                   width: '100%',
-                  padding: 20,
-                  justifyContent: 'space-between'
+                  backgroundColor: 'transparent',
+                  flexDirection: 'row'
                 }}
               >
+                {/* flash and switch */}
                 <View
                   style={{
-                    alignSelf: 'center',
-                    flex: 1,
-                    alignItems: 'center'
+                    position: 'absolute',
+                    left: '85%',
+                    top: '10%',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
                   }}
                 >
-                  <TouchableOpacity
-                    onPress={__takePicture}
+                  {flashMode === 'off' ? (<TouchableOpacity
+                    onPress={__handleFlashMode}
                     style={{
-                      width: 70,
-                      height: 70,
-                      bottom: 0,
                       borderRadius: 50,
-                      backgroundColor: '#fff'
+                      height: 35,
+                      width: 35
                     }}
-                  />
+                  >
+                    <Ionicons name="flash-off-outline" size={30} color="white" />
+                  </TouchableOpacity>) : (<TouchableOpacity
+                    onPress={__handleFlashMode}
+                    style={{
+                      borderRadius: 50,
+                      height: 35,
+                      width: 35
+                    }}
+                  >
+                    <Ionicons name="flash" size={30} color='gold' />
+                  </TouchableOpacity>)}
+
+
+                  <TouchableOpacity
+                    onPress={__switchCamera}
+                    style={{
+                      marginTop: 20,
+                      borderRadius: 50,
+                      height: 35,
+                      width: 35
+                    }}
+                  >
+                    <MaterialCommunityIcons name="camera-flip-outline" size={30} color="white" />
+                  </TouchableOpacity>
+                </View>
+                {/* #take pic */}
+                <View
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    flexDirection: 'row',
+                    flex: 1,
+                    width: '100%',
+                    padding: 20,
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <View
+                    style={{
+                      alignSelf: 'center',
+                      flex: 1,
+                      alignItems: 'center'
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={__takePicture}
+                      style={{
+                        width: 70,
+                        height: 70,
+                        bottom: 0,
+                        borderRadius: 50,
+                        backgroundColor: '#fff'
+                      }}
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
-          </Camera>
-        )}
+            </Camera>
+          )}
+        </View>
       </View>
-    </View>
+    </>
+
   )
 }
 
