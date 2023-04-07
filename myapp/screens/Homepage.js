@@ -1,7 +1,10 @@
-import { StatusBar } from 'expo-status-bar'
 import React, { useRef, useState, useEffect } from "react";
 import {
-  StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image, Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
   Pressable,
   Modal,
   ActivityIndicator,
@@ -16,6 +19,9 @@ import {
   startPrediction,
 } from '../helpers/tensorHelper';
 import { cropPicture } from '../helpers/imageHelper';
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase/firebase-setup";
+import { uploadDogToDB } from "../firebase/firestore";
 
 const RESULT_MAPPING = ['circle', 'triangle']
 
@@ -27,6 +33,17 @@ export default function Homepage(props) {
   const cameraRef = useRef();
   const [isProcessing, setIsProcessing] = useState(false);
   const [presentedShape, setPresentedShape] = useState('');
+  const [imageUri, setImageUri] = useState('');
+
+  const getImage = async (uri) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      return blob;
+    } catch (err) {
+      console.log("fetch image ", err);
+    }
+  };
 
   const verifyPermission = async () => {
     if (permissionInfo.granted) {
@@ -57,7 +74,6 @@ export default function Homepage(props) {
     }
   }
   const __switchCamera = () => {
-    // console.log(cameraType)
     if (cameraType === 'back') {
       setCameraType('front')
     } else {
@@ -67,13 +83,14 @@ export default function Homepage(props) {
 
   const handleImageCapture = async () => {
     setIsProcessing(true);
+    const img = await cameraRef.current.takePictureAsync({ quality: 0.1, });
     const imageData = await cameraRef.current.takePictureAsync({
       base64: true,
     });
-    processImagePrediction(imageData);
+    processImagePrediction(imageData, img.uri);
   };
 
-  const processImagePrediction = async (base64Image) => {
+  const processImagePrediction = async (base64Image, uri) => {
     const croppedData = await cropPicture(base64Image, 300);
     const model = await getModel();
     const tensor = await convertBase64ToTensor(croppedData.base64);
@@ -83,12 +100,34 @@ export default function Homepage(props) {
     const highestPrediction = prediction.indexOf(
       Math.max.apply(null, prediction),
     );
-    setPresentedShape(RESULT_MAPPING[highestPrediction]);
+    const breeds = RESULT_MAPPING[highestPrediction]
+    try {
+      if (uri) {
+        const imageBlob = await getImage(uri);
+        const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+        const imageRef = await ref(storage, `images/${imageName}`);
+        const uploadResult = await uploadBytes(imageRef, imageBlob);
+        uri = uploadResult.metadata.fullPath;
+        setImageUri(uri);
+      }
+      await uploadDogToDB({
+        breeds,
+        uri,
+      });
+      console.log('image upload success')
+    } catch (err) {
+      console.log("image upload ", err);
+    }
+    setIsProcessing(false)
+    setPresentedShape(breeds)
+    console.log(imageUri)
+    props.navigation.navigate('Resultpage',{imageUri})
   };
 
   return (
     <View style={styles.container}>
-      <Modal visible={isProcessing} transparent={true} animationType="slide">
+      {isProcessing && <Loading />}
+      {/* <Modal visible={isProcessing} transparent={true} animationType="slide">
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text>Your current shape is {presentedShape}</Text>
@@ -103,7 +142,7 @@ export default function Homepage(props) {
             </Pressable>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
       <Camera
         ref={cameraRef}
@@ -140,8 +179,6 @@ export default function Homepage(props) {
           >
             <Ionicons name="flash" size={30} color='gold' />
           </TouchableOpacity>)}
-
-
           <TouchableOpacity
             onPress={__switchCamera}
             style={{
