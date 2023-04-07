@@ -73,7 +73,7 @@ export default function App() {
 
         <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
         <Stack.Screen name="Loading" component={Loading} options={{ headerTitle: "Wait for a moment..." }} />
-        <Stack.Screen name="Resultpage" component={Resultpage} options={{ headerTitle: "Dog Assessor" }} />
+        <Stack.Screen name="Resultpage" component={Resultpage} options={{ headerTitle: "Dog Assessor Result" }} />
       </Stack.Navigator>
     );
   };

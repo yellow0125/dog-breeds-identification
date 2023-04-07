@@ -4,18 +4,21 @@ import { useState, useEffect } from "react";
 import { collection, onSnapshot, query, where } from "firebase/firestore"
 import { firestore as db } from '../firebase/firebase-setup'
 import ResultImage from '../components/UI/ResultImage';
+import { form } from '../constants/Style';
 export default function Resultpage({ navigation, route }) {
-  const [res, setRes] = useState([{'breeds':'','uri':''}])
+
+  const [res, setRes] = useState([{ 'breeds': '', 'uri': '' }])
+
   console.log(route.params)
   console.log(res)
   useEffect(() => {
     const unsubsribe = onSnapshot(
       query(
         collection(db, "dogs"),
-        where("uri", "==", route.params.imageUri)),
+        where("uri", "==", route.params.uri)),
       (QuerySnapshot) => {
         if (QuerySnapshot.empty) {
-          setRes(null);
+          setRes([{ 'breeds': '', 'uri': '' }]);
           return;
         }
         setRes(
@@ -31,12 +34,12 @@ export default function Resultpage({ navigation, route }) {
     }
   }, [],);
   const item = res[0]
-  
+
   return (
     <View>
-      <Text>Resultpage</Text>
-      <Text>{item.breeds}</Text>
-      {item.uri != '' && <ResultImage uri={item.uri}/>}
+      <Text>xxx</Text>
+      {item.breeds != '' && <Text>{item.breeds}</Text>}
+      {item.uri != '' && <ResultImage uri={item.uri}  style={form.imageInDetail}/>}
     </View>
 
   )

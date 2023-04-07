@@ -107,8 +107,7 @@ export default function Homepage(props) {
         const imageName = uri.substring(uri.lastIndexOf("/") + 1);
         const imageRef = await ref(storage, `images/${imageName}`);
         const uploadResult = await uploadBytes(imageRef, imageBlob);
-        uri = uploadResult.metadata.fullPath;
-        setImageUri(uri);
+        uri = uploadResult.metadata.fullPath;    
       }
       await uploadDogToDB({
         breeds,
@@ -118,32 +117,23 @@ export default function Homepage(props) {
     } catch (err) {
       console.log("image upload ", err);
     }
-    setIsProcessing(false)
+    console.log(uri)
+    props.navigation.navigate('Resultpage',{uri})
+    setIsProcessing(false);
     setPresentedShape(breeds)
-    console.log(imageUri)
-    props.navigation.navigate('Resultpage',{imageUri})
+    
+    
+    resetOperation
   };
+
+  function resetOperation() {
+    setPresentedShape('');
+    setImageUri('')
+}
 
   return (
     <View style={styles.container}>
       {isProcessing && <Loading />}
-      {/* <Modal visible={isProcessing} transparent={true} animationType="slide">
-        <View style={styles.modal}>
-          <View style={styles.modalContent}>
-            <Text>Your current shape is {presentedShape}</Text>
-            {presentedShape === '' && <ActivityIndicator size="large" />}
-            <Pressable
-              style={styles.dismissButton}
-              onPress={() => {
-                setPresentedShape('');
-                setIsProcessing(false);
-              }}>
-              <Text>Dismiss</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal> */}
-
       <Camera
         ref={cameraRef}
         style={styles.camera}
