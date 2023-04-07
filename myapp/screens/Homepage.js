@@ -5,15 +5,15 @@ import { Camera } from 'expo-camera'
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Loading from './Loading';
-export default function Homepage({ route }) {
+export default function Homepage(props) {
   const [startCamera, setStartCamera] = React.useState(false)
   const [previewVisible, setPreviewVisible] = React.useState(false)
   const [capturedImage, setCapturedImage] = React.useState(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
   const [camera, setCamera] = useState(null);
-  const [loading, setLoading] = useState(false)
-
+  const [imageUri, setImageUri] = useState('');
+  
   const verifyPermission = async () => {
     if (permissionInfo.granted) {
       return true;
@@ -38,13 +38,13 @@ export default function Homepage({ route }) {
     // console.log(photo)
     setPreviewVisible(true)
     setCapturedImage(photo)
+    setImageUri(photo.uri);
   }
 
   const __savePhoto = () => {
-    setLoading(true)
+    props.navigation.navigate('Loading')
+
   }
-
-
 
   const __retakePicture = () => {
     setCapturedImage(null)
@@ -69,7 +69,6 @@ export default function Homepage({ route }) {
   }
   return (
     <>
-      {loading && <Loading />}
       <View style={styles.container}>
         <View
           style={{
