@@ -58,8 +58,6 @@ export default function Homepage({ route }) {
     setLoading(true)
   }
 
-
-
   const __retakePicture = () => {
     setCapturedImage(null)
     setPreviewVisible(false)
