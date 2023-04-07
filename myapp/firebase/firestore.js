@@ -71,5 +71,16 @@ export const uploadRecipeToDB = async (recipe) => {
     }
 }
 
+export const uploadDogToDB = async (recipe) => {
+    try {
+        await addDoc(collection(firestore, "dogs"), {
+            ...recipe,
+            user: auth.currentUser.uid,
+        });
+    } catch (error) {
+        console.log("Error when writing into db", error)
+    }
+}
+
 
 

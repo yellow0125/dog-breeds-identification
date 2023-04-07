@@ -1,7 +1,10 @@
-import { StatusBar } from 'expo-status-bar'
 import React, { useRef, useState, useEffect } from "react";
 import {
-  StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image, Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
   Pressable,
   Modal,
   ActivityIndicator,
@@ -16,6 +19,9 @@ import {
   startPrediction,
 } from '../helpers/tensorHelper';
 import { cropPicture } from '../helpers/imageHelper';
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase/firebase-setup";
+import { uploadDogToDB } from "../firebase/firestore";
 
 const RESULT_MAPPING = ['n02085620-Chihuahua',
   'n02085782-Japanese_spaniel',
@@ -141,12 +147,22 @@ const RESULT_MAPPING = ['n02085620-Chihuahua',
 export default function Homepage(props) {
 
   const [startCamera, setStartCamera] = React.useState(false)
-  const [previewVisible, setPreviewVisible] = React.useState(false)
-  const [capturedImage, setCapturedImage] = React.useState(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
-  const [camera, setCamera] = useState(null);
+  const cameraRef = useRef();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [presentedShape, setPresentedShape] = useState('');
   const [imageUri, setImageUri] = useState('');
+
+  const getImage = async (uri) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      return blob;
+    } catch (err) {
+      console.log("fetch image ", err);
+    }
+  };
 
   const verifyPermission = async () => {
     if (permissionInfo.granted) {
@@ -167,22 +183,6 @@ export default function Homepage(props) {
     })();
   }, []);
 
-  const __takePicture = async () => {
-    const photo = await camera.takePictureAsync()
-    // console.log(photo)
-    setPreviewVisible(true)
-    setCapturedImage(photo)
-    setImageUri(photo.uri);
-  }
-
-  const __savePhoto = () => {
-    props.navigation.navigate('Loading')
-  }
-
-  const __retakePicture = () => {
-    setCapturedImage(null)
-    setPreviewVisible(false)
-  }
   const __handleFlashMode = () => {
     if (flashMode === 'on') {
       setFlashMode('off')
@@ -193,7 +193,6 @@ export default function Homepage(props) {
     }
   }
   const __switchCamera = () => {
-    // console.log(cameraType)
     if (cameraType === 'back') {
       setCameraType('front')
     } else {
@@ -201,76 +200,16 @@ export default function Homepage(props) {
     }
   }
 
-  //   return (
-  //     <>
-  //       <View style={styles.container}>
-  //         <View
-  //           style={{
-  //             flex: 1,
-  //             width: '100%'
-  //           }}
-  //         >
-  //           {previewVisible && capturedImage ? (
-  //             <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
-  //           ) : (
-  //             <Camera
-  //               type={cameraType}
-  //               flashMode={flashMode}
-  //               style={{ flex: 1 }}
-  //               ref={r => setCamera(r)}
-  //             >
-  //               <View
-  //                 style={{
-  //                   flex: 1,
-  //                   width: '100%',
-  //                   backgroundColor: 'transparent',
-  //                   flexDirection: 'row'
-  //                 }}
-  //               >
-  //                 {/* flash and switch */}
-  //                 <View
-  //                   style={{
-  //                     position: 'absolute',
-  //                     left: '85%',
-  //                     top: '10%',
-  //                     flexDirection: 'column',
-  //                     justifyContent: 'space-between'
-  //                   }}
-  //                 >
-  //                   {flashMode === 'off' ? (<TouchableOpacity
-  //                     onPress={__handleFlashMode}
-  //                     style={{
-  //                       borderRadius: 50,
-  //                       height: 35,
-  //                       width: 35
-  //                     }}
-  //                   >
-  //                     <Ionicons name="flash-off-outline" size={30} color="white" />
-  //                   </TouchableOpacity>) : (<TouchableOpacity
-  //                     onPress={__handleFlashMode}
-  //                     style={{
-  //                       borderRadius: 50,
-  //                       height: 35,
-  //                       width: 35
-  //                     }}
-  //                   >
-  //                     <Ionicons name="flash" size={30} color='gold' />
-  //                   </TouchableOpacity>)}
-
-
-  const cameraRef = useRef();
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [presentedShape, setPresentedShape] = useState('');
-
   const handleImageCapture = async () => {
     setIsProcessing(true);
+    const img = await cameraRef.current.takePictureAsync({ quality: 0.1, });
     const imageData = await cameraRef.current.takePictureAsync({
       base64: true,
     });
-    processImagePrediction(imageData);
+    processImagePrediction(imageData, img.uri);
   };
 
-  const processImagePrediction = async (base64Image) => {
+  const processImagePrediction = async (base64Image, uri) => {
     const croppedData = await cropPicture(base64Image, 300);
     const model = await getModel();
     const tensor = await convertBase64ToTensor(croppedData.base64);
@@ -280,159 +219,94 @@ export default function Homepage(props) {
     const highestPrediction = prediction.indexOf(
       Math.max.apply(null, prediction),
     );
-    setPresentedShape(RESULT_MAPPING[highestPrediction]);
+    const breeds = RESULT_MAPPING[highestPrediction]
+    try {
+      if (uri) {
+        const imageBlob = await getImage(uri);
+        const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+        const imageRef = await ref(storage, `images/${imageName}`);
+        const uploadResult = await uploadBytes(imageRef, imageBlob);
+        uri = uploadResult.metadata.fullPath;    
+      }
+      await uploadDogToDB({
+        breeds,
+        uri,
+      });
+      console.log('image upload success')
+    } catch (err) {
+      console.log("image upload ", err);
+    }
+    console.log(uri)
+    props.navigation.navigate('Resultpage',{uri})
+    setIsProcessing(false);
+    setPresentedShape(breeds)
+    
+    
+    resetOperation
   };
 
-  // return (
-  //   <>
-  //     {loading && <Loading />}
-  //     <View style={styles.container}>
-  //       <View
-  //         style={{
-  //           flex: 1,
-  //           width: '100%'
-  //         }}
-  //       >
-  //         {previewVisible && capturedImage ? (
-  //           <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
-  //         ) : (
-  //           <Camera
-  //             type={cameraType}
-  //             flashMode={flashMode}
-  //             style={{ flex: 1 }}
-  //             ref={r => setCamera(r)}
-  //           >
-  //             <View
-  //               style={{
-  //                 flex: 1,
-  //                 width: '100%',
-  //                 backgroundColor: 'transparent',
-  //                 flexDirection: 'row'
-  //               }}
-  //             >
-  //               {/* flash and switch */}
-  //               <View
-  //                 style={{
-  //                   position: 'absolute',
-  //                   left: '85%',
-  //                   top: '10%',
-  //                   flexDirection: 'column',
-  //                   justifyContent: 'space-between'
-  //                 }}
-  //               >
-  //                 {flashMode === 'off' ? (<TouchableOpacity
-  //                   onPress={__handleFlashMode}
-  //                   style={{
-  //                     borderRadius: 50,
-  //                     height: 35,
-  //                     width: 35
-  //                   }}
-  //                 >
-  //                   <Ionicons name="flash-off-outline" size={30} color="white" />
-  //                 </TouchableOpacity>) : (<TouchableOpacity
-  //                   onPress={__handleFlashMode}
-  //                   style={{
-  //                     borderRadius: 50,
-  //                     height: 35,
-  //                     width: 35
-  //                   }}
-  //                 >
-  //                   <Ionicons name="flash" size={30} color='gold' />
-  //                 </TouchableOpacity>)}
-
-
-  //                 <TouchableOpacity
-  //                   onPress={__switchCamera}
-  //                   style={{
-  //                     marginTop: 20,
-  //                     borderRadius: 50,
-  //                     height: 35,
-  //                     width: 35
-  //                   }}
-  //                 >
-  //                   <MaterialCommunityIcons name="camera-flip-outline" size={30} color="white" />
-  //                 </TouchableOpacity>
-  //               </View>
-  //               {/* #take pic */}
-  //               <View
-  //                 style={{
-  //                   position: 'absolute',
-  //                   bottom: 0,
-  //                   flexDirection: 'row',
-  //                   flex: 1,
-  //                   width: '100%',
-  //                   padding: 20,
-  //                   justifyContent: 'space-between'
-  //                 }}
-  //               >
-  //                 <View
-  //                   style={{
-  //                     alignSelf: 'center',
-  //                     flex: 1,
-  //                     alignItems: 'center'
-  //                   }}
-  //                 >
-  //                   <TouchableOpacity
-  //                     onPress={__takePicture}
-  //                     style={{
-  //                       width: 70,
-  //                       height: 70,
-  //                       bottom: 0,
-  //                       borderRadius: 50,
-  //                       backgroundColor: '#fff'
-  //                     }}
-  //                   />
-  //                 </View>
-  //               </View>
-  //             </View>
-  //           </Camera>
-  //         )}
-  //       </View>
-  //     </View>
-  //   </>
-
-  // )
+  function resetOperation() {
+    setPresentedShape('');
+    setImageUri('')
+}
 
   return (
     <View style={styles.container}>
-      <Modal visible={isProcessing} transparent={true} animationType="slide">
-        <View style={styles.modal}>
-          <View style={styles.modalContent}>
-            <Text>Your current shape is {presentedShape}</Text>
-            {presentedShape === '' && <ActivityIndicator size="large" />}
-            <Pressable
-              style={styles.dismissButton}
-              onPress={() => {
-                setPresentedShape('');
-                setIsProcessing(false);
-              }}>
-              <Text>Dismiss</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-
+      {isProcessing && <Loading />}
       <Camera
         ref={cameraRef}
         style={styles.camera}
-        type={Camera.Constants.Type.back}
+        type={cameraType}
+        flashMode={flashMode}
         autoFocus={true}
-        whiteBalance={Camera.Constants.WhiteBalance.auto}></Camera>
+        whiteBalance={Camera.Constants.WhiteBalance.auto}>
+        <View
+          style={{
+            position: 'absolute',
+            left: '85%',
+            top: '10%',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
+          }}
+        >
+          {flashMode === 'off' ? (<TouchableOpacity
+            onPress={__handleFlashMode}
+            style={{
+              borderRadius: 50,
+              height: 35,
+              width: 35
+            }}
+          >
+            <Ionicons name="flash-off-outline" size={30} color="white" />
+          </TouchableOpacity>) : (<TouchableOpacity
+            onPress={__handleFlashMode}
+            style={{
+              borderRadius: 50,
+              height: 35,
+              width: 35
+            }}
+          >
+            <Ionicons name="flash" size={30} color='gold' />
+          </TouchableOpacity>)}
+          <TouchableOpacity
+            onPress={__switchCamera}
+            style={{
+              marginTop: 20,
+              borderRadius: 50,
+              height: 35,
+              width: 35
+            }}
+          >
+            <MaterialCommunityIcons name="camera-flip-outline" size={30} color="white" />
+          </TouchableOpacity>
+        </View>
+      </Camera>
       <Pressable
         onPress={() => handleImageCapture()}
         style={styles.captureButton}></Pressable>
     </View>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center'
-//   }
-// })
 
 const styles = StyleSheet.create({
   container: {
@@ -446,13 +320,13 @@ const styles = StyleSheet.create({
   },
   captureButton: {
     position: 'absolute',
-    left: Dimensions.get('screen').width / 2 - 50,
     bottom: 40,
-    width: 100,
+    width: 70,
     zIndex: 100,
-    height: 100,
+    height: 70,
     backgroundColor: 'white',
     borderRadius: 50,
+    alignSelf: 'center',
   },
   modal: {
     flex: 1,
@@ -481,78 +355,3 @@ const styles = StyleSheet.create({
   },
 });
 
-const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
-  // console.log('sdsfds', photo)
-  return (
-    <View
-      style={{
-        backgroundColor: 'transparent',
-        flex: 1,
-        width: '100%',
-        height: '100%'
-      }}
-    >
-      <ImageBackground
-        source={{ uri: photo && photo.uri }}
-        style={{
-          flex: 1
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            padding: 15,
-            justifyContent: 'flex-end'
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between'
-            }}
-          >
-            <TouchableOpacity
-              onPress={retakePicture}
-              style={{
-                width: 130,
-                height: 40,
-
-                alignItems: 'center',
-                borderRadius: 4
-              }}
-            >
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 20
-                }}
-              >
-                Re-take
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={savePhoto}
-              style={{
-                width: 130,
-                height: 40,
-
-                alignItems: 'center',
-                borderRadius: 4
-              }}
-            >
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 20
-                }}
-              >
-                Go identifying
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ImageBackground>
-    </View>
-  )
-}

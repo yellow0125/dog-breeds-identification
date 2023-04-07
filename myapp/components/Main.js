@@ -34,14 +34,14 @@ export default function Main() {
 
         }}
       />
-      <Tab.Screen name="Record" component={Recordpage}
+      {/* <Tab.Screen name="Record" component={Recordpage}
         options={{
           tabBarIcon: ({ color, size }) => <Entypo name="heart" size={size} color={color} />,
           headerTitle: "Search history",
 
         }}
 
-      />
+      /> */}
       <Tab.Screen name="Profile" component={Userpage}
         options={({ navigation }) => {
           return {
