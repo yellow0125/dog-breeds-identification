@@ -19,15 +19,16 @@ import { cropPicture } from '../helpers/imageHelper';
 
 const RESULT_MAPPING = ['circle', 'triangle']
 
-export default function Homepage({ route }) {
+export default function Homepage(props) {
+
   const [startCamera, setStartCamera] = React.useState(false)
   const [previewVisible, setPreviewVisible] = React.useState(false)
   const [capturedImage, setCapturedImage] = React.useState(null)
   const [cameraType, setCameraType] = React.useState(Camera.Constants.Type.back)
   const [flashMode, setFlashMode] = React.useState('off')
   const [camera, setCamera] = useState(null);
-  const [loading, setLoading] = useState(false)
-
+  const [imageUri, setImageUri] = useState('');
+  
   const verifyPermission = async () => {
     if (permissionInfo.granted) {
       return true;
@@ -52,10 +53,11 @@ export default function Homepage({ route }) {
     // console.log(photo)
     setPreviewVisible(true)
     setCapturedImage(photo)
+    setImageUri(photo.uri);
   }
 
   const __savePhoto = () => {
-    setLoading(true)
+    props.navigation.navigate('Loading')
   }
 
   const __retakePicture = () => {
@@ -79,6 +81,63 @@ export default function Homepage({ route }) {
       setCameraType('back')
     }
   }
+
+//   return (
+//     <>
+//       <View style={styles.container}>
+//         <View
+//           style={{
+//             flex: 1,
+//             width: '100%'
+//           }}
+//         >
+//           {previewVisible && capturedImage ? (
+//             <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
+//           ) : (
+//             <Camera
+//               type={cameraType}
+//               flashMode={flashMode}
+//               style={{ flex: 1 }}
+//               ref={r => setCamera(r)}
+//             >
+//               <View
+//                 style={{
+//                   flex: 1,
+//                   width: '100%',
+//                   backgroundColor: 'transparent',
+//                   flexDirection: 'row'
+//                 }}
+//               >
+//                 {/* flash and switch */}
+//                 <View
+//                   style={{
+//                     position: 'absolute',
+//                     left: '85%',
+//                     top: '10%',
+//                     flexDirection: 'column',
+//                     justifyContent: 'space-between'
+//                   }}
+//                 >
+//                   {flashMode === 'off' ? (<TouchableOpacity
+//                     onPress={__handleFlashMode}
+//                     style={{
+//                       borderRadius: 50,
+//                       height: 35,
+//                       width: 35
+//                     }}
+//                   >
+//                     <Ionicons name="flash-off-outline" size={30} color="white" />
+//                   </TouchableOpacity>) : (<TouchableOpacity
+//                     onPress={__handleFlashMode}
+//                     style={{
+//                       borderRadius: 50,
+//                       height: 35,
+//                       width: 35
+//                     }}
+//                   >
+//                     <Ionicons name="flash" size={30} color='gold' />
+//                   </TouchableOpacity>)}
+
 
   const cameraRef = useRef();
   const [isProcessing, setIsProcessing] = useState(false);

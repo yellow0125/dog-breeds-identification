@@ -71,8 +71,8 @@ export default function App() {
           headerTitleAlign: "center",
         }} initialRouteName="Main">
 
-        <Stack.Screen name="Main" component={Main} options={{ headerShown: false }}/>
-        {/* {loading && <Stack.Screen name="Loading" component={Loading} options={{ headerTitle: "Wait for a moment..." }} />} */}
+        <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
+        <Stack.Screen name="Loading" component={Loading} options={{ headerTitle: "Wait for a moment..." }} />
         <Stack.Screen name="Resultpage" component={Resultpage} options={{ headerTitle: "Dog Assessor" }} />
       </Stack.Navigator>
     );
