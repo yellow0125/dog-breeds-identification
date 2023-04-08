@@ -1,10 +1,12 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, Fragment } from "react";
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   Alert,
   Pressable,
+  Text,
+  TouchableHighlight,
 } from 'react-native'
 import { Camera } from 'expo-camera'
 import { Ionicons } from '@expo/vector-icons';
@@ -21,126 +23,125 @@ import { storage } from "../firebase/firebase-setup";
 import { uploadDogToDB } from "../firebase/firestore";
 import Color from "../constants/Color";
 
-const RESULT_MAPPING = ['Chihuahua',
-'Japanese Spaniel',
-'Maltese',
-'Pekinese',
-'ShihTzu',
-'Blenheim Spaniel',
-'papillon',
-'Toy Terrier',
-'Rhodesian Ridgeback',
-'Afghan Hound',
-'Basset',
-'Beagle',
-'Bloodhound',
-'Bluetick',
-'Black and Tan Coonhound',
-'Walker Hound',
-'English Foxhound',
-'Redbone',
-'Borzoi',
-'Irish Wolfhound',
-'Italian Greyhound',
-'Whippet',
-'Ibizan Hound',
-'Norwegian Elkhound',
-'Otterhound',
-'Saluki',
-'Scottish Deerhound',
-'Weimaraner',
-'Staffordshire Bullterrier',
-'American Staffordshire Terrier',
-'Bedlington Terrier',
-'Border Terrier',
-'Kerry Blue Terrier',
-'Irish Terrier',
-'Norfolk Terrier',
-'Norwich Terrier',
-'Yorkshire Terrier',
-'Wire Haired Fox Terrier',
-'Lakeland Terrier',
-'Sealyham Terrier',
-'Airedale',
-'Cairn',
-'Australian Terrier',
-'Dandie Dinmont',
-'Boston Bull',
-'Miniature Schnauzer',
-'Giant Schnauzer',
-'Standard Schnauzer',
-'Scotch Terrier',
-'Tibetan Terrier',
-'Silky Terrier',
-'Soft Coated Wheaten Terrier',
-'West Highland White Terrier',
-'Lhasa',
-'Flat Coated Retriever',
-'Curly Coated Retriever',
-'Golden Retriever',
-'Labrador Retriever',
-'Chesapeake Bay Retriever',
-'German Short Haired Pointer',
-'Vizsla',
-'English Setter',
-'Irish Setter',
-'GordonSetter',
-'Brittany Spaniel',
-'Clumber',
-'English Springer',
-'Welsh Springer Spaniel',
-'Cocker Spaniel',
-'Sussex Spaniel',
-'Irish Water Spaniel',
-'Kuvasz',
-'Schipperke',
-'Groenendael',
-'Malinois',
-'Briard',
-'Kelpie',
-'Komondor',
-'Old English Sheepdog',
-'Shetland Sheepdog',
-'Collie',
-'Border Collie',
-'Bouvier Des Flandres',
-'Rottweiler',
-'German Shepherd',
-'Doberman',
-'Miniature Pinscher',
-'Greater Swiss Mountain Dog',
-'Bernese Mountain Dog',
-'Appenzeller',
-'EntleBucher',
-'Boxer',
-'Bull Mastiff',
-'Tibetan Mastiff',
-'French Bulldog',
-'Great Dane',
-'Saint Bernard',
-'Eskimo Dog',
-'Malamute',
-'Siberian Husky',
-'Affenpinscher',
-'Basenji',
-'Pug',
-'Leonberg',
-'Newfoundland',
-'Great Pyrenees',
-'Samoyed',
-'Pomeranian',
-'Chow',
-'keeshond',
-'Brabancon Griffon',
-'Pembroke',
-'Cardigan',
-'Toy Poodle',
-'Miniature Poodle',
-'Standard Poodle',
-'Mexican Hairless',
-'Dingo',
-'Dhole',
-'Hunting Dog']
+const RESULT_MAPPING = ['Standard Schnauzer', 'Chihuahua',
+  'Japanese Spaniel',
+  'Maltese',
+  'Pekinese',
+  'ShihTzu',
+  'Blenheim Spaniel',
+  'papillon',
+  'Toy Terrier',
+  'Rhodesian Ridgeback',
+  'Afghan Hound',
+  'Basset',
+  'Beagle',
+  'Bloodhound',
+  'Bluetick',
+  'Black and Tan Coonhound',
+  'Walker Hound',
+  'English Foxhound',
+  'Redbone',
+  'Borzoi',
+  'Irish Wolfhound',
+  'Italian Greyhound',
+  'Whippet',
+  'Ibizan Hound',
+  'Norwegian Elkhound',
+  'Otterhound',
+  'Saluki',
+  'Scottish Deerhound',
+  'Weimaraner',
+  'Staffordshire Bullterrier',
+  'American Staffordshire Terrier',
+  'Bedlington Terrier',
+  'Border Terrier',
+  'Kerry Blue Terrier',
+  'Irish Terrier',
+  'Norfolk Terrier',
+  'Norwich Terrier',
+  'Yorkshire Terrier',
+  'Wire Haired Fox Terrier',
+  'Lakeland Terrier',
+  'Sealyham Terrier',
+  'Airedale',
+  'Cairn',
+  'Australian Terrier',
+  'Dandie Dinmont',
+  'Boston Bull',
+  'Miniature Schnauzer',
+  'Giant Schnauzer',
+  'Scotch Terrier',
+  'Tibetan Terrier',
+  'Silky Terrier',
+  'Soft Coated Wheaten Terrier',
+  'West Highland White Terrier',
+  'Lhasa',
+  'Flat Coated Retriever',
+  'Curly Coated Retriever',
+  'Golden Retriever',
+  'Labrador Retriever',
+  'Chesapeake Bay Retriever',
+  'German Short Haired Pointer',
+  'Vizsla',
+  'English Setter',
+  'Irish Setter',
+  'GordonSetter',
+  'Brittany Spaniel',
+  'Clumber',
+  'English Springer',
+  'Welsh Springer Spaniel',
+  'Cocker Spaniel',
+  'Sussex Spaniel',
+  'Irish Water Spaniel',
+  'Kuvasz',
+  'Schipperke',
+  'Groenendael',
+  'Malinois',
+  'Briard',
+  'Kelpie',
+  'Komondor',
+  'Old English Sheepdog',
+  'Shetland Sheepdog',
+  'Collie',
+  'Border Collie',
+  'Bouvier Des Flandres',
+  'Rottweiler',
+  'German Shepherd',
+  'Doberman',
+  'Miniature Pinscher',
+  'Greater Swiss Mountain Dog',
+  'Bernese Mountain Dog',
+  'Appenzeller',
+  'EntleBucher',
+  'Boxer',
+  'Bull Mastiff',
+  'Tibetan Mastiff',
+  'French Bulldog',
+  'Great Dane',
+  'Saint Bernard',
+  'Eskimo Dog',
+  'Malamute',
+  'Siberian Husky',
+  'Affenpinscher',
+  'Basenji',
+  'Pug',
+  'Leonberg',
+  'Newfoundland',
+  'Great Pyrenees',
+  'Samoyed',
+  'Pomeranian',
+  'Chow',
+  'keeshond',
+  'Brabancon Griffon',
+  'Pembroke',
+  'Cardigan',
+  'Toy Poodle',
+  'Miniature Poodle',
+  'Standard Poodle',
+  'Mexican Hairless',
+  'Dingo',
+  'Dhole',
+  'Hunting Dog']
 
 export default function Homepage(props) {
 
@@ -199,12 +200,14 @@ export default function Homepage(props) {
   }
 
   const handleImageCapture = async () => {
-    setIsProcessing(true);
+
     const img = await cameraRef.current.takePictureAsync({ quality: 0.1, });
     const imageData = await cameraRef.current.takePictureAsync({
       base64: true,
     });
+    setIsProcessing(true)
     processImagePrediction(imageData, img.uri);
+
   };
 
   const processImagePrediction = async (base64Image, uri) => {
@@ -247,66 +250,64 @@ export default function Homepage(props) {
   }
 
   return (
-    <View style={styles.container}>
-      {isProcessing && <Loading />}
-      <Camera
-        ref={cameraRef}
-        style={styles.camera}
-        type={cameraType}
-        flashMode={flashMode}
-        autoFocus={true}
-        whiteBalance={Camera.Constants.WhiteBalance.auto}>
-        <View
-          style={{
-            position: 'absolute',
-            left: '85%',
-            top: '10%',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}
+    <>
+      {!isProcessing ? (<View style={styles.container}>
+        <Camera
+          ref={cameraRef}
+          style={styles.camera}
+          type={cameraType}
+          flashMode={flashMode}
+          autoFocus={true}
+          whiteBalance={Camera.Constants.WhiteBalance.auto}>
+          <View
+            style={{
+              position: 'absolute',
+              left: '85%',
+              top: '10%',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}
+          >
+            {flashMode === 'off' ? (<TouchableOpacity
+              onPress={__handleFlashMode}
+              style={{
+                borderRadius: 50,
+                height: 35,
+                width: 35
+              }}
+            >
+              <Ionicons name="flash-off-outline" size={30} color="white" />
+            </TouchableOpacity>) : (<TouchableOpacity
+              onPress={__handleFlashMode}
+              style={{
+                borderRadius: 50,
+                height: 35,
+                width: 35
+              }}
+            >
+              <Ionicons name="flash" size={30} color='gold' />
+            </TouchableOpacity>)}
+            <TouchableOpacity
+              onPress={__switchCamera}
+              style={{
+                marginTop: 20,
+                borderRadius: 50,
+                height: 35,
+                width: 35
+              }}
+            >
+              <MaterialCommunityIcons name="camera-flip-outline" size={30} color="white" />
+            </TouchableOpacity>
+          </View>
+        </Camera>
+        <TouchableHighlight
+          onPress={handleImageCapture}
+          style={styles.captureButton}
         >
-          {flashMode === 'off' ? (<TouchableOpacity
-            onPress={__handleFlashMode}
-            style={{
-              borderRadius: 50,
-              height: 35,
-              width: 35
-            }}
-          >
-            <Ionicons name="flash-off-outline" size={30} color="white" />
-          </TouchableOpacity>) : (<TouchableOpacity
-            onPress={__handleFlashMode}
-            style={{
-              borderRadius: 50,
-              height: 35,
-              width: 35
-            }}
-          >
-            <Ionicons name="flash" size={30} color='gold' />
-          </TouchableOpacity>)}
-          <TouchableOpacity
-            onPress={__switchCamera}
-            style={{
-              marginTop: 20,
-              borderRadius: 50,
-              height: 35,
-              width: 35
-            }}
-          >
-            <MaterialCommunityIcons name="camera-flip-outline" size={30} color="white" />
-          </TouchableOpacity>
-        </View>
-      </Camera>
-
-      <Pressable
-        android_ripple={{ color: Color.Grey, foreground: true }}
-        onPress={() => handleImageCapture()}
-        style={({ pressed }) => pressed && styles.pressed}
-
-      >
-        <View style={styles.captureButton} />
-      </Pressable>
-    </View>
+          <Fragment />
+        </TouchableHighlight>
+      </View>) : (<Loading />)}
+    </>
 
   );
 }
@@ -324,9 +325,9 @@ const styles = StyleSheet.create({
   captureButton: {
     position: 'absolute',
     bottom: 40,
-    width: 70,
+    width: 75,
     zIndex: 100,
-    height: 70,
+    height: 75,
     backgroundColor: 'white',
     borderRadius: 50,
     alignSelf: 'center',
@@ -359,6 +360,7 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.75,
     borderRadius: 4,
+
   },
 });
 
