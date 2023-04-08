@@ -40,7 +40,7 @@ export default function Resultpage({ navigation, route }) {
     <>
       {item.uri != '' && <View>
         <ResultImage uri={item.uri} style={form.imageInDetail} />
-        <Text style={style.title}>{item.breeds}</Text>
+        <Text style={styles.title}>{item.breeds}</Text>
         <Text>The dog you scanned looks llike a {item.breeds}</Text>
       </View>}
     </>
