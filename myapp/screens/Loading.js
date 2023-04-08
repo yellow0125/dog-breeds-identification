@@ -14,8 +14,8 @@ export default function Loading({ modal }) {
       />
       <Text
         style={{ position: 'absolute', 
-        marginTop: Dimensions.get('window').height * 0.65,
-        fontSize:16 }}>
+        marginTop: Dimensions.get('window').height * 0.68,
+        fontSize:17 }}>
         Wait for a moment......</Text>
     </View>
 

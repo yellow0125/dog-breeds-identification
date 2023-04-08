@@ -23,6 +23,7 @@ import { cropPicture } from '../helpers/imageHelper';
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from "../firebase/firebase-setup";
 import { uploadDogToDB } from "../firebase/firestore";
+import Color from "../constants/Color";
 
 const RESULT_MAPPING = ['n02085620-Chihuahua',
   'n02085782-Japanese_spaniel',
@@ -303,7 +304,14 @@ export default function Homepage(props) {
         </View>
       </Camera>
 
-      <Pressable onPress={() => handleImageCapture()} style={styles.captureButton}/>
+      <Pressable
+        android_ripple={{ color: Color.Grey, foreground: true }}
+        onPress={() => handleImageCapture()}
+        style={({ pressed }) => pressed && styles.pressed}
+
+      >
+        <View style={styles.captureButton} />
+      </Pressable>
 
     </View>
 
@@ -354,6 +362,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'red',
+  },
+  pressed: {
+    opacity: 0.75,
+    borderRadius: 4,
   },
 });
 

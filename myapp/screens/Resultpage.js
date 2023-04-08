@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { useState, useEffect } from "react";
 import { collection, onSnapshot, query, where } from "firebase/firestore"
@@ -39,9 +39,12 @@ export default function Resultpage({ navigation, route }) {
   return (
     <>
       {item.uri != '' && <View>
-        <ResultImage uri={item.uri} style={form.imageInDetail} />
+        <View style={styles.imageContainer}>
+          <ResultImage uri={item.uri} style={form.imageInDetail} />
+        </View>
+
         <Text style={styles.title}>{item.breeds}</Text>
-        <Text>The dog you scanned looks llike a {item.breeds}</Text>
+        <Text style={styles.text}>Congrats! Based on the analysis of the image you provided, the computer vision algorithm has identified the dog you scanned looks like a {item.breeds}!</Text>
       </View>}
     </>
 
@@ -50,12 +53,25 @@ export default function Resultpage({ navigation, route }) {
 
 const styles = StyleSheet.create({
   titleContainer: {
-      flex: 1,
-      padding: 20,
+    flex: 1,
+    padding: 20,
   },
   title: {
-      color: Color.Black,
-      fontWeight: 'bold',
-      fontSize: 28,
+    marginTop:20,
+    color: Color.Black,
+    fontWeight: 'bold',
+    fontSize: 28,
+    alignSelf:'center',
   },
+  imageContainer:{
+    width:"100%",
+    height:"70%"
+
+  },
+  text:{
+    marginTop:10,
+    alignSelf:'center',
+    paddingHorizontal:10,
+
+  }
 })
