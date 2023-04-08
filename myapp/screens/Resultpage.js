@@ -5,6 +5,7 @@ import { collection, onSnapshot, query, where } from "firebase/firestore"
 import { firestore as db } from '../firebase/firebase-setup'
 import ResultImage from '../components/UI/ResultImage';
 import { form } from '../constants/Style';
+import Color from '../constants/Color';
 export default function Resultpage({ navigation, route }) {
 
   const [res, setRes] = useState([{ 'breeds': '', 'uri': '' }])
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
       padding: 20,
   },
   title: {
-      color: Colors.Black,
+      color: Color.Black,
       fontWeight: 'bold',
       fontSize: 28,
   },
