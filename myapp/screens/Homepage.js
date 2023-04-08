@@ -8,6 +8,7 @@ import {
   Pressable,
   Modal,
   ActivityIndicator,
+  TouchableHighlight,
 } from 'react-native'
 import { Camera } from 'expo-camera'
 import { Ionicons } from '@expo/vector-icons';
@@ -303,8 +304,10 @@ export default function Homepage(props) {
       </Camera>
       <TouchableHighlight
         onPress={() => handleImageCapture()}
-        style={styles.captureButton}
-      />
+        
+      >
+        <Pressable style={styles.captureButton}/>
+      </TouchableHighlight>
     </View>
 
   );
