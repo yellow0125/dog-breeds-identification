@@ -1,10 +1,12 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, Fragment } from "react";
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   Alert,
   Pressable,
+  Text,
+  TouchableHighlight,
 } from 'react-native'
 import { Camera } from 'expo-camera'
 import { Ionicons } from '@expo/vector-icons';
@@ -21,7 +23,7 @@ import { storage } from "../firebase/firebase-setup";
 import { uploadDogToDB } from "../firebase/firestore";
 import Color from "../constants/Color";
 
-const RESULT_MAPPING = ['Standard Schnauzer','Chihuahua',
+const RESULT_MAPPING = ['Standard Schnauzer', 'Chihuahua',
   'Japanese Spaniel',
   'Maltese',
   'Pekinese',
@@ -198,6 +200,7 @@ export default function Homepage(props) {
   }
 
   const handleImageCapture = async () => {
+
     const img = await cameraRef.current.takePictureAsync({ quality: 0.1, });
     const imageData = await cameraRef.current.takePictureAsync({
       base64: true,
@@ -247,65 +250,64 @@ export default function Homepage(props) {
   }
 
   return (
-    <View style={styles.container}>
-      {isProcessing && <Loading />}
-      <Camera
-        ref={cameraRef}
-        style={styles.camera}
-        type={cameraType}
-        flashMode={flashMode}
-        autoFocus={true}
-        whiteBalance={Camera.Constants.WhiteBalance.auto}>
-        <View
-          style={{
-            position: 'absolute',
-            left: '85%',
-            top: '10%',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}
+    <>
+      {!isProcessing ? (<View style={styles.container}>
+        <Camera
+          ref={cameraRef}
+          style={styles.camera}
+          type={cameraType}
+          flashMode={flashMode}
+          autoFocus={true}
+          whiteBalance={Camera.Constants.WhiteBalance.auto}>
+          <View
+            style={{
+              position: 'absolute',
+              left: '85%',
+              top: '10%',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}
+          >
+            {flashMode === 'off' ? (<TouchableOpacity
+              onPress={__handleFlashMode}
+              style={{
+                borderRadius: 50,
+                height: 35,
+                width: 35
+              }}
+            >
+              <Ionicons name="flash-off-outline" size={30} color="white" />
+            </TouchableOpacity>) : (<TouchableOpacity
+              onPress={__handleFlashMode}
+              style={{
+                borderRadius: 50,
+                height: 35,
+                width: 35
+              }}
+            >
+              <Ionicons name="flash" size={30} color='gold' />
+            </TouchableOpacity>)}
+            <TouchableOpacity
+              onPress={__switchCamera}
+              style={{
+                marginTop: 20,
+                borderRadius: 50,
+                height: 35,
+                width: 35
+              }}
+            >
+              <MaterialCommunityIcons name="camera-flip-outline" size={30} color="white" />
+            </TouchableOpacity>
+          </View>
+        </Camera>
+        <TouchableHighlight
+          onPress={handleImageCapture}
+          style={styles.captureButton}
         >
-          {flashMode === 'off' ? (<TouchableOpacity
-            onPress={__handleFlashMode}
-            style={{
-              borderRadius: 50,
-              height: 35,
-              width: 35
-            }}
-          >
-            <Ionicons name="flash-off-outline" size={30} color="white" />
-          </TouchableOpacity>) : (<TouchableOpacity
-            onPress={__handleFlashMode}
-            style={{
-              borderRadius: 50,
-              height: 35,
-              width: 35
-            }}
-          >
-            <Ionicons name="flash" size={30} color='gold' />
-          </TouchableOpacity>)}
-          <TouchableOpacity
-            onPress={__switchCamera}
-            style={{
-              marginTop: 20,
-              borderRadius: 50,
-              height: 35,
-              width: 35
-            }}
-          >
-            <MaterialCommunityIcons name="camera-flip-outline" size={30} color="white" />
-          </TouchableOpacity>
-        </View>
-      </Camera>
-
-      <Pressable
-        android_ripple={{ color: Color.Grey, foreground: true }}
-        onPress={() => handleImageCapture()}
-        style={({ pressed }) => pressed && styles.pressed}
-      >
-        <View style={styles.captureButton} />
-      </Pressable>
-    </View>
+          <Fragment />
+        </TouchableHighlight>
+      </View>) : (<Loading />)}
+    </>
 
   );
 }
@@ -323,9 +325,9 @@ const styles = StyleSheet.create({
   captureButton: {
     position: 'absolute',
     bottom: 40,
-    width: 70,
+    width: 75,
     zIndex: 100,
-    height: 70,
+    height: 75,
     backgroundColor: 'white',
     borderRadius: 50,
     alignSelf: 'center',
@@ -358,6 +360,7 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.75,
     borderRadius: 4,
+
   },
 });
 
