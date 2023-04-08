@@ -1,11 +1,10 @@
 import React from "react";
 import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, Dimensions, Image, } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, Image, } from 'react-native';
 import { doc, onSnapshot } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { firestore, auth } from '../firebase/firebase-setup';
 import { useRoute } from "@react-navigation/native";
-import { saveUser } from '../firebase/firestore';
 import Color from "../constants/Color";
 import { TouchableHighlight } from 'react-native';
 import Row from "../components/UI/Row";

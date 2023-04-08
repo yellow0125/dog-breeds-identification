@@ -1,10 +1,9 @@
-import { View, Text, StyleSheet, Dimensions, Modal } from 'react-native'
+import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
 import LottieView from 'lottie-react-native';
 
-export default function Loading({ modal }) {
+export default function Loading() {
   return (
-
     <View style={styles.container}>
       <LottieView
         source={require('../assets/lottie/dog-anima.json')}
@@ -14,8 +13,8 @@ export default function Loading({ modal }) {
       />
       <Text
         style={{ position: 'absolute', 
-        marginTop: Dimensions.get('window').height * 0.68,
-        fontSize:17 }}>
+        marginTop: Dimensions.get('window').height * 0.15,
+        fontSize:20 }}>
         Wait for a moment......</Text>
     </View>
 
@@ -24,13 +23,13 @@ export default function Loading({ modal }) {
 
 const styles = StyleSheet.create({
   container: {
-    // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
     paddingHorizontal: 200,
     paddingVertical: Dimensions.get('window').height * 0.15,
   },
   animation: {
+    marginTop:35,
     width: Dimensions.get('window').width * 0.15,
     height: Dimensions.get('window').height * 0.5,
   },

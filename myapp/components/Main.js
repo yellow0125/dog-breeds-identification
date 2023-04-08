@@ -1,12 +1,9 @@
 import React from 'react'
-import { Entypo, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Colors from "../constants/Color";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import Homepage from "../screens/Homepage";
 import Userpage from "../screens/Userpage";
-import Recordpage from '../screens/Recordpage';
-// import LocateMe from './UI/LocateMe';
 
 const Tab = createBottomTabNavigator();
 export default function Main() {
@@ -34,14 +31,6 @@ export default function Main() {
 
         }}
       />
-      {/* <Tab.Screen name="Record" component={Recordpage}
-        options={{
-          tabBarIcon: ({ color, size }) => <Entypo name="heart" size={size} color={color} />,
-          headerTitle: "Search history",
-
-        }}
-
-      /> */}
       <Tab.Screen name="Profile" component={Userpage}
         options={({ navigation }) => {
           return {

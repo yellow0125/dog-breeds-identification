@@ -1,4 +1,4 @@
-import { collection, addDoc, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { auth, firestore } from "./firebase-setup";
 
 export const createUserToDB = async (data) => {
@@ -41,7 +41,7 @@ export async function saveUser(user) {
 
 export async function deleteFromDB(key) {
     try {
-        await deleteDoc(doc(firestore, "recipes", key));
+        await deleteDoc(doc(firestore, "dogs", key));
     } catch (err) {
         console.log(err);
     }
@@ -55,19 +55,6 @@ export async function getUser() {
 
     } catch (err) {
         console.log(err);
-    }
-}
-
-export const uploadRecipeToDB = async (recipe) => {
-    try {
-        await addDoc(collection(firestore, "recipes"), {
-            ...recipe,
-            user: auth.currentUser.uid,
-            like: 28,
-
-        });
-    } catch (error) {
-        console.log("Error when writing into db", error)
     }
 }
 

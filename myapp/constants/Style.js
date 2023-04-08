@@ -23,7 +23,6 @@ const container = StyleSheet.create({
         backgroundColor: Colors.BgDarkGreen
 
     },
-
     horizontal: {
         flexDirection: 'row',
         display: 'flex',
@@ -55,67 +54,6 @@ const container = StyleSheet.create({
         aspectRatio: 1 / 1,
 
     },
-    fillHorizontal: {
-        flexGrow: 1,
-        paddingBottom: 0
-    },
-    imageSmall: {
-        aspectRatio: 1 / 1,
-        height: 70
-    },
-    gallery: {
-
-        borderWidth: 1,
-        borderColor: 'gray',
-    },
-    splash: {
-        padding: 200,
-        height: '100%',
-        width: '100%'
-    },
-    chatRight: {
-        margin: 10,
-        marginBottom: 10,
-        backgroundColor: 'dodgerblue',
-        padding: 10,
-        borderRadius: 8,
-        alignSelf: 'flex-end'
-
-    },
-    chatLeft: {
-        margin: 10,
-        marginBottom: 10,
-        backgroundColor: 'grey',
-        padding: 10,
-        borderRadius: 8,
-        alignItems: 'flex-end',
-        textAlign: 'right',
-        alignSelf: 'flex-start'
-    },
-    containerAdd: {
-        flex: 1,
-        backgroundColor: Colors.White,
-        paddingTop: 30,
-    },
-    post: {
-        backgroundColor: Colors.BgLightGreen,
-        width: 300,
-        margin: 10,
-        padding: 20,
-        borderRadius: 10,
-    },
-    picker: {
-        backgroundColor: Colors.BgDarkGreen,
-    },
-    pickerItem: {
-        color: Colors.White,
-        backgroundColor: Colors.BgDarkGreen,
-    },
-    post2: {
-        width: "100%",
-        marginTop: 10,
-    },
-
     imageContainer: {
         width: Dimensions.get('window').width * 0.7,
         height: Dimensions.get('window').width * 0.7,
@@ -127,20 +65,6 @@ const container = StyleSheet.create({
         alignSelf: 'center',
         marginLeft:200,
     },
-    NoRecipeImage: {
-        width: "100%",
-        height: "100%"
-    },
-    wholeContainer: {
-        borderRadius: 5,
-        marginTop: 4,
-        marginRight: 5,
-        marginBottom: 5,
-
-        width: Dimensions.get('window').width * 0.5,
-    },
-
-
 })
 
 const form = StyleSheet.create({
@@ -184,52 +108,18 @@ const form = StyleSheet.create({
         width: '100%',
         height: 200
     },
-    imageInPost: {
-        justifyContent: 'center',
-        width: '100%',
-        height: 200,
-        borderRadius: 10,
-    },
-    imageInPost2: {
-        justifyContent: 'center',
-        width: '46%',
-        height: 170,
-        margin: 5,
-
-    },
     imageInDetail: {
+        marginTop:15,
         justifyContent: 'center',
-        width: '80%',
+        width: '95%',
         alignSelf:'center',
-    },
-    pictureButton: {
-        width: 100,
-        height: 100,
-        borderRadius: 100 / 2
     },
     imageR: {
         width: '100%',
         height: '100%',
-        borderRadius: 5,
+        borderRadius: 50,
 
     },
-    selectToggle: {
-        paddingHorizontal: 10,
-        paddingVertical: 12,
-        borderColor: Colors.BgDarkGreen,
-        borderWidth: 2,
-        margin: 5,
-    },
-    RecipeListTitle: {
-        color: Colors.DescriptionText,
-        marginLeft: 5,
-        fontWeight: 'bold',
-    },
-    NoRecipePagetext: {
-        fontSize: 16,
-        alignSelf: 'center',
-        margin: 5
-    }
 
 })
 
