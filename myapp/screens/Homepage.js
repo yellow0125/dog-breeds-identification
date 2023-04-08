@@ -302,12 +302,9 @@ export default function Homepage(props) {
           </TouchableOpacity>
         </View>
       </Camera>
-      <TouchableHighlight
-        onPress={() => handleImageCapture()}
-        
-      >
-        <Pressable style={styles.captureButton}/>
-      </TouchableHighlight>
+
+      <Pressable onPress={() => handleImageCapture()} style={styles.captureButton}/>
+
     </View>
 
   );
