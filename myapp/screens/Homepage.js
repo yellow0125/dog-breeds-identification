@@ -226,7 +226,7 @@ export default function Homepage(props) {
         const imageName = uri.substring(uri.lastIndexOf("/") + 1);
         const imageRef = await ref(storage, `images/${imageName}`);
         const uploadResult = await uploadBytes(imageRef, imageBlob);
-        uri = uploadResult.metadata.fullPath;    
+        uri = uploadResult.metadata.fullPath;
       }
       await uploadDogToDB({
         breeds,
@@ -237,18 +237,18 @@ export default function Homepage(props) {
       console.log("image upload ", err);
     }
     console.log(uri)
-    props.navigation.navigate('Resultpage',{uri})
+    props.navigation.navigate('Resultpage', { uri })
     setIsProcessing(false);
     setPresentedShape(breeds)
-    
-    
+
+
     resetOperation
   };
 
   function resetOperation() {
     setPresentedShape('');
     setImageUri('')
-}
+  }
 
   return (
     <View style={styles.container}>
@@ -301,10 +301,12 @@ export default function Homepage(props) {
           </TouchableOpacity>
         </View>
       </Camera>
-      <Pressable
+      <TouchableHighlight
         onPress={() => handleImageCapture()}
-        style={styles.captureButton}></Pressable>
+        style={styles.captureButton}
+      />
     </View>
+
   );
 }
 

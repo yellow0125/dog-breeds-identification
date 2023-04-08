@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
 import { useState, useEffect } from "react";
 import { collection, onSnapshot, query, where } from "firebase/firestore"
@@ -36,11 +36,25 @@ export default function Resultpage({ navigation, route }) {
   const item = res[0]
 
   return (
-    <View>
-      <Text>xxx</Text>
-      {item.breeds != '' && <Text>{item.breeds}</Text>}
-      {item.uri != '' && <ResultImage uri={item.uri}  style={form.imageInDetail}/>}
-    </View>
+    <>
+      {item.uri != '' && <View>
+        <ResultImage uri={item.uri} style={form.imageInDetail} />
+        <Text style={style.title}>{item.breeds}</Text>
+        <Text>The dog you scanned looks llike a {item.breeds}</Text>
+      </View>}
+    </>
 
   )
 }
+
+const styles = StyleSheet.create({
+  titleContainer: {
+      flex: 1,
+      padding: 20,
+  },
+  title: {
+      color: Colors.Black,
+      fontWeight: 'bold',
+      fontSize: 28,
+  },
+})
