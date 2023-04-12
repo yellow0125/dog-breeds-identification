@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
 import { useState, useEffect } from "react";
 import { collection, onSnapshot, query, where } from "firebase/firestore"
@@ -65,8 +65,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: "70%",
-
+    height: Dimensions.get('window').height * 0.65,
   },
   text: {
     marginTop: 10,

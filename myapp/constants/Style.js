@@ -63,7 +63,7 @@ const container = StyleSheet.create({
         overflow: "hidden",
         marginVertical: Dimensions.get('window').height / 30,
         alignSelf: 'center',
-        marginLeft:200,
+        marginLeft: 200,
     },
 })
 
@@ -109,16 +109,19 @@ const form = StyleSheet.create({
         height: 200
     },
     imageInDetail: {
-        marginTop:15,
+        marginTop: 15,
         justifyContent: 'center',
         width: '95%',
-        alignSelf:'center',
+        alignSelf: 'center',
+        borderRadius: 50,
+        
     },
     imageR: {
         width: '100%',
         height: '100%',
         borderRadius: 50,
-
+        
+        
     },
 
 })

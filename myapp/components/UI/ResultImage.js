@@ -26,7 +26,7 @@ export default function ResultImage(props) {
 
     return (
           <View style={style}>
-            <Image source={imageUri ? { uri: imageUri } : null} style={form.imageR} />
+            <Image source={imageUri ? { uri: imageUri } : null} style={form.imageR} resizeMode='cover'/>
           </View>
     )
   }
